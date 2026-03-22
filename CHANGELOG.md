@@ -2,6 +2,49 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [1.7.1] — 2026-03-22
+
+### Added
+- Server-side license verification (Upstash Redis + Vercel API)
+- Device binding with composite fingerprint (SHA-256, max 3 devices per key)
+- HMAC-SHA256 signed tokens for offline license validation
+- Token auto-refresh every 7 days via service worker alarm (12h check interval)
+- 3-day offline grace period with 3-tier degradation (Active → Grace → Degraded)
+- Rate limiting on license APIs (10/min verify, 20/min refresh)
+- Audit logging for all license events (90-day retention in Redis)
+- Admin API: key lookup, audit viewer, device reset (`/api/admin-lookup`)
+- Key revocation API with Stripe webhook auto-revoke on subscription cancel
+- Dual signing key support for secret rotation without service disruption
+
+### Fixed
+- **Critical**: Date range scan no longer deletes history outside scan window (scraper.js)
+- **Critical**: Online order range scan now merges by orderNumber instead of full replacement
+- **High**: License refresh failure no longer permanently downgrades paying users
+- **High**: Service worker validates sender tab ID before saving scan results
+- **High**: All popup storage writes routed through service worker serialization
+- **High**: Online order activeMemberId always follows most recent scan
+- **High**: Dedup key expanded to include receiptNumber, itemsSold, payment
+- **Medium**: parseUsDate() now accepts both M/D/YYYY and MM/DD/YYYY formats
+- **Medium**: deactivate() clears all 8 related storage keys (no orphaned state)
+- **Medium**: "Switch Member" confirm dialog accurately describes data deletion scope
+- **Medium**: Server requests have 10s timeout + resp.ok validation + error categorization
+
+### Changed
+- License activation requires server verification (local-only keys no longer accepted)
+- Error messages rewritten as user-friendly product language
+- Key input placeholder changed from format hint to "Enter your license key"
+- Trademark text updated: "Trademark pending" → "Receipt Pro™ is a trademark of Ulan Hada Corporation"
+- Safari debug flag set to false for production
+- Mobile sharecard image now visible on phones (was hidden below 1024px)
+- Install section includes official Google/Apple help links
+
+### Security
+- Copyright registered with U.S. Copyright Office (eCO submission complete)
+- Server-side HMAC prevents client-side key forgery
+- Token tampering detected via crypto.timingSafeEqual
+- Rate limiting prevents brute-force key enumeration
+- Audit trail enables piracy detection and customer support
+
 ## [1.7.0] — 2026-03-22
 
 ### Added
