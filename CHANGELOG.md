@@ -2,6 +2,22 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.0] — 2026-03-23
+
+### Fixed
+- **Critical**: Anchor-based modal matching replaces index-based matching — fixes N→N-1 receipt offset where each receipt's items belonged to the previous receipt in export
+- **Critical**: GraphQL items now supplement modal text when regex misses products — fixes 85+ receipts where main items were lost (only coupons/deposits shown)
+- **Critical**: Executive `E`-prefixed item lines without leading tab now captured by primary regex (e.g. `E 1476106 PISTACHIOTRF`)
+- **High**: Return receipt qty/amount correctly captured — negative values are valid data (`unit !== 0` replaces `unit > 0`)
+- **High**: Qty/unitPrice derivation moved after GraphQL enrichment to prevent premature single-product assignment
+- **Medium**: Coupon/adjustment lines excluded from "missing qty" detection — yellow notices now only for genuine data gaps
+- **Medium**: Single-SKU return receipts with consistent data no longer show false "bulk receipt" warnings
+
+### Changed
+- Detailed Scan uses 3-layer item capture: modal text → GraphQL enrichment → GraphQL supplement
+- Button-to-record matching uses total+store anchor instead of array index
+- All 4 codebases synced: chrome-ext-v2-draft, chrome-ext, safari-extension, safari-xcode
+
 ## [1.7.1] — 2026-03-22
 
 ### Added
