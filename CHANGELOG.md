@@ -2,6 +2,20 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.1] — 2026-03-23
+
+### Added
+- **Excel VLOOKUP formulas**: Purchase Details (Description) and Summary (Product) now link to Item# Nicknames sheet
+  - Custom Name filled → shows "English/Chinese"; empty → shows original English name
+  - No extra columns — formulas replace static text in existing cells
+- **Nicknames pre-fill**: Custom Name column pre-filled from product_names.json (Chinese translations)
+- **Share Card 3-line CTA**: "Helps members see if upgrading makes sense, and understand their 2% Executive rewards. All in Receipt Pro — now available as an extension for Safari and Chrome."
+
+### Changed
+- Popup text: Quick Scan → "Check your store visits and total spending"; Executive Scan → "Export your warehouse and online order details"
+- Messaging shift: "verify" → "understand" throughout extension copy
+- All 5 languages updated for Share Card CTA (en/zh/ja/ko/es)
+
 ## [2.0.0] — 2026-03-23
 
 ### Fixed
