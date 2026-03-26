@@ -2,6 +2,23 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.3] — 2026-03-25
+
+### Added
+- **PrivacyInfo.xcprivacy**: Privacy manifest for Safari extension (App Store requirement for iOS 17+ / macOS 14.4+)
+- **Vercel Web Analytics**: Traffic analytics enabled on myreceiptpro.com (privacy-friendly, no cookies)
+- **Vercel Speed Insights**: Core Web Vitals monitoring (LCP, CLS, INP) enabled on myreceiptpro.com
+- **Terms of Service link**: Added to Safari extension popup footer (Privacy · Terms · Support)
+
+### Changed
+- Safari extension: Stripe external payment link removed — redirects to key activation (App Store Guideline 3.1.1 compliance)
+- Safari manifest description: "Analyze your warehouse and online purchases, track store visits, and export receipts to Excel. All data stays local." (trademark compliance)
+- Website: "No tracking or analytics" → "No personal data tracking"
+- Website: Updated Share Card image, Result Dashboard and Extension Popup screenshots
+
+### Fixed
+- Safari extension: Results upgrade modal now directs to myreceiptpro.com instead of external Stripe payment link
+
 ## [2.0.1] — 2026-03-23
 
 ### Added
