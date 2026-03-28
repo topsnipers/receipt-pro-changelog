@@ -2,6 +2,19 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.4] — 2026-03-27
+
+### Added
+- **Multi-country support**: Canada (costco.ca) fully supported — country auto-detection, CAD currency, HST/GST/PST tax breakdown in Excel exports
+- **Dynamic tax columns**: Canadian receipts with tax breakdown automatically add HST/GST/PST columns in Excel and CSV exports
+
+### Fixed
+- **Share Trial modal text**: UI displayed "30 Days" but actual trial was 14 days — corrected to "MAX Unlocked for 14 Days!"
+- **Early stop threshold**: Increased from 4 → 9 consecutive empty periods — fixes Canadian members with sparse purchase history being missed by aggressive early stop
+
+### Changed
+- Project directory renamed from `Costco Contacts` to `ReceiptPro`
+
 ## [2.0.3] — 2026-03-25
 
 ### Added
@@ -103,7 +116,7 @@ All notable changes to Receipt Pro are documented here.
 - Date range picker replaces year chips for flexible scan filtering
 - Scan mode memory — last selected mode restored on popup open
 - Stop Scan — graceful interruption with partial data save
-- Early Stop — 4 consecutive empty periods auto-breaks scan
+- Early Stop — consecutive empty periods auto-breaks scan
 - Data gap detection notice for members with history beyond Costco retention
 - Export/Import JSON backup for dataset portability
 - 5-column action grid on Results page (Warehouse Report, Accounting, Share, Online, Tax-Exempt)
