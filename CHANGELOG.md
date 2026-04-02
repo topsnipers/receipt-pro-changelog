@@ -2,6 +2,17 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.3-fix] — 2026-04-02
+
+### Fixed
+- **Chrome Web Store rejection (Blue Argon)**: Removed old design/demo HTML files that referenced `https://cdn.tailwindcss.com` via `<script>` tag — violated Manifest V3 remotely hosted code policy
+  - Deleted: `popup/code.html`, `Loading/code.html`, `results/results-v2-design.html` (Tailwind CDN mockups)
+  - Deleted: `popup/DESIGN.md`, `popup/screen.png`, `popup/preview.html`, `popup/popup-mock.html`, `popup/popup-mock-popup.js`, `results/results-mock.html`, `results/share-card-v2-design.html`, `Loading/` directory, `logo/` directory
+
+### Changed
+- Build process upgraded: explicit 17-file whitelist zip (227KB) replaces full-directory zip — prevents non-runtime files from entering release package
+- Verified zero remote code references: no `cdn.tailwindcss.com`, `eval()`, or `new Function()` in release package
+
 ## [2.0.4] — 2026-03-27
 
 ### Added
