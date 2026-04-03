@@ -13,15 +13,32 @@ All notable changes to Receipt Pro are documented here.
 - Build process upgraded: explicit 17-file whitelist zip (227KB) replaces full-directory zip — prevents non-runtime files from entering release package
 - Verified zero remote code references: no `cdn.tailwindcss.com`, `eval()`, or `new Function()` in release package
 
-## [2.0.4] — 2026-03-27
+## [2.0.4] — 2026-04-02
+
+### Fixed
+- **Costco quarterly period parser**: Costco rotated quarterly periods from Jan/Apr/Jul/Oct to Feb/May/Aug/Nov on April 1st. Replaced all hardcoded month names with adaptive parser that dynamically handles any `YYYY MonthName - MonthName` format. Future quarterly rotations will not break the scanner
+- **Build script terser collision**: Fixed variable name collision in minified builds — files sharing global scope via `<script>` or `importScripts` no longer use `toplevel` mangle
+- **Safari App Store compliance**: Replaced Stripe external payment link with myreceiptpro.com redirect (Guideline 3.1.1)
+
+### Changed
+- **Share Card redesign**: Updated text across all 5 languages (EN/ZH/JA/KO/ES)
+  - "Weekly Average" → "Monthly Average" (calculation: days ÷ 30.44)
+  - "Your activity" → "You have shopped across"
+  - New CTA: "Helps you see if Executive is worth the upgrade — and where your 2% rewards come from."
+  - Footer simplified to 2-line layout: blue CTA + gray copyright line
+  - Pro promo: "Receipt Pro — all in one place. Now available for Safari and Chrome."
+- **Trial modal text**: "MAX Unlocked for 14 Days!" → "MAX Version Unlocked for 2 Weeks!"
+- **Product nicknames**: Cleared built-in nickname data — Nicknames sheet now exports as blank template for users to customize
+
+## [2.0.3-hotfix] — 2026-03-27
 
 ### Added
 - **Multi-country support**: Canada (costco.ca) fully supported — country auto-detection, CAD currency, HST/GST/PST tax breakdown in Excel exports
 - **Dynamic tax columns**: Canadian receipts with tax breakdown automatically add HST/GST/PST columns in Excel and CSV exports
 
 ### Fixed
-- **Share Trial modal text**: UI displayed "30 Days" but actual trial was 14 days — corrected to "MAX Unlocked for 14 Days!"
-- **Early stop threshold**: Increased from 4 → 9 consecutive empty periods — fixes Canadian members with sparse purchase history being missed by aggressive early stop
+- **Share Trial modal text**: UI displayed "30 Days" but actual trial was 14 days — corrected to match 14-day trial duration
+- **Early stop threshold**: Increased from 4 → 9 consecutive empty periods — fixes Canadian members with sparse purchase history
 
 ### Changed
 - Project directory renamed from `Costco Contacts` to `ReceiptPro`
