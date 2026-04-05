@@ -2,6 +2,33 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [3.0.0] — 2026-04-04
+
+### Added
+- **Apple × Monarch UI redesign** (Safari version): Complete visual overhaul combining Apple's native macOS feel with Monarch Money's data dashboard density
+  - SF Pro system font stack, `#f2f2f7` grouped background, single Apple Blue accent
+  - Frosted glass navigation bar with backdrop blur
+  - Bento 12-column KPI grid with large bold numbers and tabular-nums alignment
+  - Pill-style scan phase badges (green=done, blue=active, gray=pending)
+  - iOS-style footer row: Activate · Privacy · Terms · Support · Switch Member
+- **Auto Share Card** for MAX users: Automatically shows Share Card when new scan data detected (`lastScanAt` > `lastShareAutoShownAt`), 1.5s delay, timestamp prevents repeat popups
+- **Dynamic View Report button**: Free → "View Report", MAX → "View Report & Export to Excel"
+- **Per-page scan diagnostics**: Logs page-by-page receipt count breakdown when receipts are missed (e.g., `Page 1: parsed 10 | Page 2: parsed 9 (TIMEOUT)`)
+
+### Fixed
+- **Critical: Refund receipts not captured** — 3 separate issues caused refund/return receipts to be silently dropped:
+  - `RECEIPT_REGEX` couldn't match `-$269.93` (leading minus before `$`) — fixed capture group
+  - `RECEIPT_REGEX` only matched `Total`, not `Refunded Total` — added `(?:Refunded\s+)?` prefix
+  - `parseReceipts()` used `parseFloat()` instead of existing `parseAmount()` — trailing minus `$25.00-` returned NaN and was silently skipped
+  - Now handles all 4 formats: `$X`, `-$X`, `$X-`, `Refunded Total\n-$X`
+
+### Changed
+- Header: "Receipt Pro" left + 🌐 "MyReceiptPro.com" link right (replaces emoji icon + LOCAL/PRIVATE chips)
+- Footer links: Privacy → website section, Support → support page (was mailto:)
+- "MAX Activated" shown in green in copyright line (not standalone row)
+- Scan phase labels shortened: "Preparing", "Scanning", "Processing", "Generating report"
+- Applied to: chrome-ext-v3, safari-extension, safari-xcode
+
 ## [2.0.3-fix] — 2026-04-02
 
 ### Fixed
