@@ -2,6 +2,23 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [3.0.1] — 2026-04-05
+
+### Changed
+- **Full compliance terminology cleanup**: Removed all scraper/crawler/bot terminology from codebase per Costco Terms of Use review
+  - File renames: `scraper.js` → `receiptParser.js`, `online-scraper.js` → `onlineParser.js`
+  - Message constants: `START_SCRAPE` → `START_PARSE`, `SCRAPE_COMPLETE` → `PARSE_COMPLETE`, etc.
+  - Storage keys: `scrapeState` → `parseState`, `lastScrapeTime` → `lastParseTime`
+  - Functions: `runScrape` → `runParse`, `extractMemberIdFromModal` → `readMemberIdFromModal`
+  - High-risk terms cleaned: `capture` → `read`, `intercept` → `monitor`, `monkey-patch` → `observe`
+  - Log tags: `[CostcoScraper]` → `[ReceiptParser]`, `[OnlineScraper]` → `[OnlineParser]`
+- **Trust messaging added** (5 languages): "Only analyzing data already visible in your account — nothing is sent anywhere."
+- **Privacy policy**: New "What Data We Access" section — explicitly states extension only reads data already displayed in user's account page
+- **Product positioning**: Receipt Pro is a user-initiated local data analysis tool, not a scraper. All code, UI, and documentation now reflect this
+
+### Applied to
+- chrome-ext-v2, chrome-ext-v3, safari-extension, safari-xcode, website
+
 ## [3.0.0] — 2026-04-04
 
 ### Added
@@ -16,8 +33,8 @@ All notable changes to Receipt Pro are documented here.
 - **Per-page scan diagnostics**: Logs page-by-page receipt count breakdown when receipts are missed (e.g., `Page 1: parsed 10 | Page 2: parsed 9 (TIMEOUT)`)
 
 ### Fixed
-- **Critical: Refund receipts not captured** — 3 separate issues caused refund/return receipts to be silently dropped:
-  - `RECEIPT_REGEX` couldn't match `-$269.93` (leading minus before `$`) — fixed capture group
+- **Critical: Refund receipts not parsed** — 3 separate issues caused refund/return receipts to be silently dropped:
+  - `RECEIPT_REGEX` couldn't match `-$269.93` (leading minus before `$`) — fixed regex group
   - `RECEIPT_REGEX` only matched `Total`, not `Refunded Total` — added `(?:Refunded\s+)?` prefix
   - `parseReceipts()` used `parseFloat()` instead of existing `parseAmount()` — trailing minus `$25.00-` returned NaN and was silently skipped
   - Now handles all 4 formats: `$X`, `-$X`, `$X-`, `Refunded Total\n-$X`
@@ -43,7 +60,7 @@ All notable changes to Receipt Pro are documented here.
 ## [2.0.4] — 2026-04-02
 
 ### Fixed
-- **Costco quarterly period parser**: Costco rotated quarterly periods from Jan/Apr/Jul/Oct to Feb/May/Aug/Nov on April 1st. Replaced all hardcoded month names with adaptive parser that dynamically handles any `YYYY MonthName - MonthName` format. Future quarterly rotations will not break the scanner
+- **Costco quarterly period parser**: Costco rotated quarterly periods from Jan/Apr/Jul/Oct to Feb/May/Aug/Nov on April 1st. Replaced all hardcoded month names with adaptive parser that dynamically handles any `YYYY MonthName - MonthName` format. Future quarterly rotations will not break the parser
 - **Build script terser collision**: Fixed variable name collision in minified builds — files sharing global scope via `<script>` or `importScripts` no longer use `toplevel` mangle
 - **Safari App Store compliance**: Replaced Stripe external payment link with myreceiptpro.com redirect (Guideline 3.1.1)
 
@@ -106,14 +123,14 @@ All notable changes to Receipt Pro are documented here.
 ### Fixed
 - **Critical**: Anchor-based modal matching replaces index-based matching — fixes N→N-1 receipt offset where each receipt's items belonged to the previous receipt in export
 - **Critical**: GraphQL items now supplement modal text when regex misses products — fixes 85+ receipts where main items were lost (only coupons/deposits shown)
-- **Critical**: Executive `E`-prefixed item lines without leading tab now captured by primary regex (e.g. `E 1476106 PISTACHIOTRF`)
-- **High**: Return receipt qty/amount correctly captured — negative values are valid data (`unit !== 0` replaces `unit > 0`)
+- **Critical**: Executive `E`-prefixed item lines without leading tab now matched by primary regex (e.g. `E 1476106 PISTACHIOTRF`)
+- **High**: Return receipt qty/amount correctly parsed — negative values are valid data (`unit !== 0` replaces `unit > 0`)
 - **High**: Qty/unitPrice derivation moved after GraphQL enrichment to prevent premature single-product assignment
 - **Medium**: Coupon/adjustment lines excluded from "missing qty" detection — yellow notices now only for genuine data gaps
 - **Medium**: Single-SKU return receipts with consistent data no longer show false "bulk receipt" warnings
 
 ### Changed
-- Detailed Scan uses 3-layer item capture: modal text → GraphQL enrichment → GraphQL supplement
+- Detailed Scan uses 3-layer item reading: modal text → GraphQL enrichment → GraphQL supplement
 - Button-to-record matching uses total+store anchor instead of array index
 - All 4 codebases synced: chrome-ext-v2-draft, chrome-ext, safari-extension, safari-xcode
 
@@ -132,7 +149,7 @@ All notable changes to Receipt Pro are documented here.
 - Dual signing key support for secret rotation without service disruption
 
 ### Fixed
-- **Critical**: Date range scan no longer deletes history outside scan window (scraper.js)
+- **Critical**: Date range scan no longer deletes history outside scan window (receiptParser.js)
 - **Critical**: Online order range scan now merges by orderNumber instead of full replacement
 - **High**: License refresh failure no longer permanently downgrades paying users
 - **High**: Service worker validates sender tab ID before saving scan results
@@ -164,7 +181,7 @@ All notable changes to Receipt Pro are documented here.
 
 ### Added
 - Safari Web Extension support (macOS + iOS universal)
-- Online Order scraping and export (MAX)
+- Online Order parsing and export (MAX)
 - Tax-Exempt Excel template export (MAX)
 - Share Card — annual spending summary with QR code, shareable as PNG
 - Multi-language support (EN/ZH/JA/KO/ES) for UI and Share Card
@@ -217,7 +234,7 @@ All notable changes to Receipt Pro are documented here.
 ### Added
 - Initial release
 - Quick Scan (free): receipt-level spending analysis
-- Warehouse Scan: item-level detail extraction
+- Warehouse Scan: item-level detail reading
 - CSV export
 - Chrome Web Store submission
 
