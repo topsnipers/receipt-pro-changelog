@@ -12,11 +12,14 @@ All notable changes to Receipt Pro are documented here.
 ### Added
 - **Extensible receipt type system** — `RECEIPT_TYPES` white-list replaces hardcoded regex. Adding a new receipt type (e.g. Tire Center) requires one array entry, no regex editing. Each record now carries a `type` field (`warehouse`, `gas`, `pharmacy`). Unknown receipt types auto-detected and logged to console
 - **Universal (Pharmacy) receipt support** — added to white-list for pharmacy transactions that display as "Universal" on Costco's purchase history
+- **Gas Station modal parser** — parses fuel type, gallons, price-per-gallon from gas receipt modal. Uses GraphQL for product name (e.g. `PREMIUM UNLEADED`) and item number, modal text for quantity (gallons) and unit price. Excel export shows full gas purchase details
 
 ### Changed
 - **Per-page receipt miss diagnostics** — replaced last-page-only dump with real-time per-page detection. When a page has fewer receipts than expected, logs the unmatched receipt text immediately (enables pinpointing regex failures)
+- **Share Card**: highest-year bar color changed from red to Costco blue — consistent with total spend styling
+- **Excel qty format**: integers display cleanly (`1`), gas station gallons show decimals (`19.37`)
 - **Share Card text updates**: "Your activity across" replaces "You have shopped across"; "Wondering if Executive is worth the upgrade" replaces "Helps you see"
-- **Popup footer**: consolidated to single "Buy License & Support — MyReceiptPro.com" link
+- **Popup footer**: consolidated to single "Buy License & Support — MyReceiptPro.com" link; removed Export/Restore Backup buttons
 - **Results footer**: simplified disclaimer text
 
 ## [3.0.1] — 2026-04-05
