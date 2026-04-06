@@ -9,6 +9,10 @@ All notable changes to Receipt Pro are documented here.
 - **Bug: waitForUpdate() timeout always returned true** — timeout branch resolved with `true`, making the timeout detection dead code. Now correctly returns `false` on timeout
 - **Online order export buttons stayed grey** — buttons kept `no-online-data` CSS class after data loaded, appearing disabled despite having data
 
+### Added
+- **Extensible receipt type system** — `RECEIPT_TYPES` white-list replaces hardcoded regex. Adding a new receipt type (e.g. Tire Center) requires one array entry, no regex editing. Each record now carries a `type` field (`warehouse`, `gas`, `pharmacy`). Unknown receipt types auto-detected and logged to console
+- **Universal (Pharmacy) receipt support** — added to white-list for pharmacy transactions that display as "Universal" on Costco's purchase history
+
 ### Changed
 - **Per-page receipt miss diagnostics** — replaced last-page-only dump with real-time per-page detection. When a page has fewer receipts than expected, logs the unmatched receipt text immediately (enables pinpointing regex failures)
 - **Share Card text updates**: "Your activity across" replaces "You have shopped across"; "Wondering if Executive is worth the upgrade" replaces "Helps you see"
