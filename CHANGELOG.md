@@ -2,6 +2,19 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.0.5] — 2026-04-05
+
+### Fixed
+- **Critical: Gas Station receipts not parsed** — `RECEIPT_REGEX` only matched `In-Warehouse`, silently dropping all Gas Station fuel purchases. Now matches both `In-Warehouse` and `Gas Station` receipt types. Store name group widened to support mixed case (e.g. "Lodi")
+- **Bug: waitForUpdate() timeout always returned true** — timeout branch resolved with `true`, making the timeout detection dead code. Now correctly returns `false` on timeout
+- **Online order export buttons stayed grey** — buttons kept `no-online-data` CSS class after data loaded, appearing disabled despite having data
+
+### Changed
+- **Per-page receipt miss diagnostics** — replaced last-page-only dump with real-time per-page detection. When a page has fewer receipts than expected, logs the unmatched receipt text immediately (enables pinpointing regex failures)
+- **Share Card text updates**: "Your activity across" replaces "You have shopped across"; "Wondering if Executive is worth the upgrade" replaces "Helps you see"
+- **Popup footer**: consolidated to single "Buy License & Support — MyReceiptPro.com" link
+- **Results footer**: simplified disclaimer text
+
 ## [3.0.1] — 2026-04-05
 
 ### Changed
