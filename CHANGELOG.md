@@ -2,25 +2,29 @@
 
 All notable changes to Receipt Pro are documented here.
 
-## [2.0.5] — 2026-04-05
-
-### Fixed
-- **Critical: Gas Station receipts not parsed** — `RECEIPT_REGEX` only matched `In-Warehouse`, silently dropping all Gas Station fuel purchases. Now matches both `In-Warehouse` and `Gas Station` receipt types. Store name group widened to support mixed case (e.g. "Lodi")
-- **Bug: waitForUpdate() timeout always returned true** — timeout branch resolved with `true`, making the timeout detection dead code. Now correctly returns `false` on timeout
-- **Online order export buttons stayed grey** — buttons kept `no-online-data` CSS class after data loaded, appearing disabled despite having data
+## [2.0.5] — 2026-04-07
 
 ### Added
-- **Extensible receipt type system** — `RECEIPT_TYPES` white-list replaces hardcoded regex. Adding a new receipt type (e.g. Tire Center) requires one array entry, no regex editing. Each record now carries a `type` field (`warehouse`, `gas`, `pharmacy`). Unknown receipt types auto-detected and logged to console
-- **Universal (Pharmacy) receipt support** — added to white-list for pharmacy transactions that display as "Universal" on Costco's purchase history
-- **Gas Station modal parser** — parses fuel type, gallons, price-per-gallon from gas receipt modal. Uses GraphQL for product name (e.g. `PREMIUM UNLEADED`) and item number, modal text for quantity (gallons) and unit price. Excel export shows full gas purchase details
+- **What's New banner**: One-time notification after major version upgrades, auto-dismissed, localized in 5 languages (EN/ZH/JA/KO/ES)
+- **Online scan completion panel**: Online order scan now shows full completion overlay with stats and export button (matches warehouse scan experience)
+- **Extensible receipt type system** — `RECEIPT_TYPES` white-list replaces hardcoded regex. Adding a new receipt type requires one array entry. Each record carries a `type` field (`warehouse`, `gas`, `pharmacy`)
+- **Gas Station modal parser** — parses fuel type, gallons, price-per-gallon from gas receipt modal. Uses GraphQL for product name and item number, modal text for quantity and unit price
+
+### Fixed
+- **Critical: Cross-year period date range**: Date-range scans crossing year boundaries (e.g., Nov 2023 – Jan 2024) returned 0 receipts. Root cause: `periodToDateRange()` treated the year label as start year for "November - January" periods, but Costco uses it as end year. Fix: when start month > end month, subtract 1 from start year
+- **Critical: Gas Station receipts not parsed** — `RECEIPT_REGEX` only matched `In-Warehouse`, silently dropping all Gas Station fuel purchases. Now matches both `In-Warehouse` and `Gas Station` receipt types
+- **Coupon unitPrice**: Coupon/discount lines showed `$0.00` unit price in Excel exports. GraphQL returns `itemUnitPriceAmount: 0` for all coupons. Now derives `unitPrice = |amount| / |qty|` automatically
+- **Bug: waitForUpdate() timeout always returned true** — now correctly returns `false` on timeout
+- **Double punctuation**: Card descriptions showed `details..` due to HTML hardcoded period conflicting with i18n text
 
 ### Changed
-- **Per-page receipt miss diagnostics** — replaced last-page-only dump with real-time per-page detection. When a page has fewer receipts than expected, logs the unmatched receipt text immediately (enables pinpointing regex failures)
-- **Share Card**: highest-year bar color changed from red to Costco blue — consistent with total spend styling
-- **Excel qty format**: integers display cleanly (`1`), gas station gallons show decimals (`19.37`)
-- **Share Card text updates**: "Your activity across" replaces "You have shopped across"; "Wondering if Executive is worth the upgrade" replaces "Helps you see"
-- **Popup footer**: consolidated to single "Buy License & Support — MyReceiptPro.com" link; removed Export/Restore Backup buttons
-- **Results footer**: simplified disclaimer text
+- Scan phase labels: "Reviewing your receipts" / "Building your report" (was "Processing" / "Generating" — avoids scraping-adjacent terminology)
+- Privacy note: "all processing happens locally on your device" (was "nothing is sent anywhere")
+- MAX card text: "Understand your 2% cashback" (was "CPA-ready export" — aligns with Executive rewards positioning)
+- Share Card: highest-year bar color changed from red to Costco blue
+- Excel qty format: integers display cleanly (`1`), gas station gallons show decimals (`19.37`)
+- Per-page receipt miss diagnostics with real-time detection
+- Applied to: chrome-ext-v2, chrome-ext-v3, safari-extension, safari-xcode
 
 ## [3.0.1] — 2026-04-05
 
@@ -28,16 +32,10 @@ All notable changes to Receipt Pro are documented here.
 - **Full compliance terminology cleanup**: Removed all scraper/crawler/bot terminology from codebase per Costco Terms of Use review
   - File renames: `scraper.js` → `receiptParser.js`, `online-scraper.js` → `onlineParser.js`
   - Message constants: `START_SCRAPE` → `START_PARSE`, `SCRAPE_COMPLETE` → `PARSE_COMPLETE`, etc.
-  - Storage keys: `scrapeState` → `parseState`, `lastScrapeTime` → `lastParseTime`
-  - Functions: `runScrape` → `runParse`, `extractMemberIdFromModal` → `readMemberIdFromModal`
   - High-risk terms cleaned: `capture` → `read`, `intercept` → `monitor`, `monkey-patch` → `observe`
-  - Log tags: `[CostcoScraper]` → `[ReceiptParser]`, `[OnlineScraper]` → `[OnlineParser]`
 - **Trust messaging added** (5 languages): "Only analyzing data already visible in your account — nothing is sent anywhere."
-- **Privacy policy**: New "What Data We Access" section — explicitly states extension only reads data already displayed in user's account page
-- **Product positioning**: Receipt Pro is a user-initiated local data analysis tool, not a scraper. All code, UI, and documentation now reflect this
-
-### Applied to
-- chrome-ext-v2, chrome-ext-v3, safari-extension, safari-xcode, website
+- **Privacy policy**: New "What Data We Access" section
+- Applied to: chrome-ext-v2, chrome-ext-v3, safari-extension, safari-xcode, website
 
 ## [3.0.0] — 2026-04-04
 
