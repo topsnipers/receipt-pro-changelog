@@ -13,6 +13,16 @@ All notable changes to Receipt Pro are documented here.
 - **grantShareTrial() server-first**: Share Card trial now calls `/api/start-trial` before granting locally. Server rejection (`already_used`) immediately blocks. Network failure falls back to local 14-day grant (intentional offline tolerance)
 - Applied to: chrome-ext-v2 (Chrome Web Store build)
 
+### Security (Codex Review Fixes)
+- **Critical: Async executor anti-pattern** — `new Promise(async (resolve) =>` in `grantShareTrial()` replaced with proper `async function`. Prevents silently swallowed rejections
+- **Critical: Webhook idempotency timing** — Dedup key now written AFTER successful processing (was before). Failed processing returns 500 so Stripe retries instead of silently dropping events
+- **Critical: XSS in success page** — `esc()` HTML escaper applied to `data.key`, `data.email`, and `err.message` in `success.js` innerHTML
+- **High: getDeviceId() error handling** — Added `chrome.runtime.lastError` checks to prevent silent storage failures
+- **High: device_id length validation** — Capped at 128 characters in `start-trial.js` and `verify-key.js` to prevent oversized Redis keys
+- **High: Trial lookup rate limiting** — `/api/verify-key` trial path (no key) now shares rate limiter, prevents unlimited Redis lookups
+- **High: checkout-success hardening** — Added rate limiting (10/min per IP), `session_id` format validation (`cs_` prefix, 256 char max)
+- **Medium: Email send deduplication** — `email_sent` flag in Stripe session metadata prevents duplicate emails on page refresh
+
 ## [2.1.1] — 2026-04-08
 
 ### Added
