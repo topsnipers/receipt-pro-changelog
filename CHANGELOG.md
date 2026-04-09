@@ -2,6 +2,36 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.1.1] — 2026-04-08
+
+### Added
+- **Stripe webhook security**: Full payment lifecycle coverage — `charge.refunded`, `charge.dispute.created`, `customer.subscription.updated` handlers added alongside existing `checkout.session.completed` and `customer.subscription.deleted`
+- **Webhook idempotency**: `webhook-event:{event.id}` deduplication key in Redis (24h TTL) prevents duplicate event processing on Stripe retries
+- **Webhook audit logging**: All webhook events logged to `webhook-events:{date}` Redis lists with 90-day TTL
+- **License key email delivery**: Resend integration sends branded email with license key on purchase. Covers both first-time generation and idempotent retry (user refresh). reply-to set to support@myreceiptpro.com
+- **Success page spam folder hint**: "Don't see it? Check your spam or junk folder." shown after purchase
+
+### Fixed
+- **Critical: Success page CSP block**: Inline `<script>` in success.html was blocked by Content-Security-Policy `script-src 'self'`. Extracted to external `/js/success.js`. All new purchases were stuck on "Verifying your purchase..." spinner
+- **Critical: Stripe Payment Link redirect**: `after_completion` was set to `hosted_confirmation` (Stripe's own page) instead of redirect to `myreceiptpro.com/success?session_id={CHECKOUT_SESSION_ID}`. Users never reached the key delivery page
+- **Critical: Email not sent (Vercel process kill)**: `sendKeyEmail()` was fire-and-forget (`.catch(() => {})`), Vercel killed the serverless function before the fetch completed. Changed to `await sendKeyEmail()` to ensure delivery before response
+- **ADMIN_SECRET trailing `\n`**: Vercel env var contained literal `\n`, causing all admin-lookup API calls to return 401 Unauthorized
+- **Success page false email claim**: "A copy has been sent to email" removed — no email sending existed. Replaced with accurate "Purchased with email. Save your key."
+- **CSP `/_vercel/` invalid path**: Updated to `https://va.vercel-scripts.com` for Vercel Analytics/Speed Insights scripts
+
+### Changed
+- **Device limit**: MAX_DEVICES reduced from 3 to 2 per license key
+- **Refund policy**: Any refund (full or partial) immediately revokes license key — no prorated support
+- **Dispute policy**: Chargeback (`charge.dispute.created`) immediately revokes with dispute reason logged
+- **Subscription status tracking**: `unpaid` and `incomplete_expired` statuses trigger revoke; `past_due` and `cancel_at_period_end` logged for audit only
+- **Email template**: Branded card layout — blue header, dark blue key block, structured sections (How to activate / What you can do with Max / Notes), Ulan Hada Corp copyright footer
+
+### Security
+- **Live Stripe webhook endpoint created**: Production endpoint with 5 subscribed events, webhook signing secret synced to Vercel env
+- **Resend domain verified**: myreceiptpro.com DKIM record added to GoDaddy DNS, verified by Resend
+- **RESEND_API_KEY**: Added to Vercel production environment
+- Applied to: myreceiptpro.com (Vercel), chrome-ext-v2 (Chrome Web Store build)
+
 ## [2.0.5] — 2026-04-07
 
 ### Added
