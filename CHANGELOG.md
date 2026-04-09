@@ -2,6 +2,17 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.1.2] — 2026-04-08
+
+### Added
+- **Server-side trial gating**: New `/api/start-trial` endpoint stores `trial:{device_id}` in Redis with 14-day TTL. Prevents trial abuse via reinstall — same device_id blocked from re-claiming
+- **Device ID generation**: `CostcoPro.getDeviceId()` generates persistent UUID via `crypto.randomUUID()`, stored in `chrome.storage.local`
+- **Trial check in verify-key**: When no license key provided, `/api/verify-key` checks for active server-side trial and returns `tier: "trial"` with expiration
+
+### Changed
+- **grantShareTrial() server-first**: Share Card trial now calls `/api/start-trial` before granting locally. Server rejection (`already_used`) immediately blocks. Network failure falls back to local 14-day grant (intentional offline tolerance)
+- Applied to: chrome-ext-v2 (Chrome Web Store build)
+
 ## [2.1.1] — 2026-04-08
 
 ### Added
