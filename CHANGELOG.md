@@ -2,6 +2,31 @@
 
 All notable changes to Receipt Pro are documented here.
 
+## [2.1.3] — 2026-04-11
+
+### Changed
+- **Popup card titles renamed**: `Quick Scan` → `Quick Overview`, `Executive Scan` → `Executive Analysis`. Applied across all 5 languages (EN/ZH/JA/KO/ES) in `lib/constants.js` (`quickScan`, `ultraTitle` i18n keys)
+- **Scan mode renamed**: `Warehouse Scan` → `Executive Scan` everywhere user-visible — button labels, results page prompts, confirm dialogs, Data Quality sheet messages. ~56 user-facing strings updated across 5 languages
+  - English button: `SCAN WAREHOUSE RECEIPTS` → `START EXECUTIVE SCAN`
+  - Item placeholder: `MAX Warehouse Scan` → `MAX Executive Scan`
+  - Grammar fix in 4 confirm dialogs: `run an MAX ...` → `run a MAX ...`
+- **Popup fallback string**: `popup.js` `|| 'Executive Scan'` → `|| 'Executive Analysis'`
+- Internal code identifiers (`scanTarget === 'warehouse'`, CSV header `Warehouse` column) unchanged for backward compatibility
+
+### Fixed — Compliance
+- **Website support.html FAQ**: `extract available item-level details` → `read available item-level details` (Costco ToU prohibited word "extract" replaced with recommended "read")
+- **Website support.html bulk receipt note**: `Receipt Pro captures all available details` → `Receipt Pro reads all available details` (prohibited word "captures" replaced)
+
+### Changed — Website
+- **Share preview meta tags** (`public/index.html`): `<title>`, `og:title`, `og:description` updated to "Receipt Pro — Check your spending, download and understand it." (replaces prior "Understand Your Costco Executive 2% Rewards" which appeared when sharing links)
+- Meta keywords simplified
+- Visible page body preserved (only link preview changed)
+
+### Release
+- **Chrome V2**: `2.1.2` → `2.1.3`. Ready-to-upload `Receipt-Pro-v2.1.3.zip` (233 KB, 19 runtime files, terser-minified)
+- **Safari V3**: `3.0.0` → `3.0.1`. Xcode `MARKETING_VERSION` bumped in 8 pbxproj locations. macOS build verified via `xcodebuild` — `** BUILD SUCCEEDED **`
+- Synced to: chrome-ext-v2, chrome-ext-v3, safari-extension, safari-xcode
+
 ## [2.1.2] — 2026-04-08
 
 ### Added
